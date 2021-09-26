@@ -24,12 +24,12 @@ pca_process <- function(mean, if_norm){
                  labelsize = 12, 
                  repel = TRUE,
                  main = "Question Clusters by k-means (k = 4)") 
-  ggsave(paste(path, "qustion_cluster", suffix, sep = ""), 
+  ggsave(paste(path, "question_cluster", suffix, sep = ""), 
          width = 13, height = 8)
   
   #fviz_nbclust(pca_score, kmeans, method = "silhouette"), optimal #cluster = 2
-  kmeans(pca_score, centers = 2, nstart = 25) %>% 
-    fviz_cluster(data = pca_score,
+  kmeans(pca_score[,1:2], centers = 2, nstart = 25) %>% 
+    fviz_cluster(data = pca_score[1:2],
                  pointsize = 3,
                  labelsize = 12, 
                  repel = TRUE, #avoid label overlap
