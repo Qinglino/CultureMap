@@ -21,8 +21,10 @@ pca_process <- function(mean, if_norm){
   kmeans(pca_loading, centers = 4, nstart = 25) %>% 
     fviz_cluster(data = pca_loading,
                  pointsize = 3,
-                 labelsize = 12, 
+                 labelsize = 10, 
                  repel = TRUE,
+                 xlab = "INDIVIDUAL-ORIENTED <---------> FAMILY-ORIENTED",
+                 ylab = "AUTHORITARIAN <---------> ANARCHIST",
                  main = "Question Clusters by k-means (k = 4)") 
   ggsave(paste(path, "question_cluster", suffix, sep = ""), 
          width = 13, height = 8)
@@ -31,7 +33,9 @@ pca_process <- function(mean, if_norm){
   kmeans(pca_score[,1:2], centers = 2, nstart = 25) %>% 
     fviz_cluster(data = pca_score[1:2],
                  pointsize = 3,
-                 labelsize = 12, 
+                 labelsize = 10, 
+                 xlab = "INDIVIDUAL-ORIENTED <---------> FAMILY-ORIENTED",
+                 ylab = "AUTHORITARIAN <---------> ANARCHIST",
                  repel = TRUE, #avoid label overlap
                  main = "Country Clusters by k-means (k = 2)") 
   ggsave(paste(path, "country_cluster", suffix, sep = ""), 
@@ -39,14 +43,18 @@ pca_process <- function(mean, if_norm){
   
   ggplot(data = pca_score, aes(x = RC1, y = RC2, color = region)) +
     geom_point() +
-    geom_mark_hull(aes(fill = region, label = region), concavity = 1) +
+    geom_mark_hull(aes(fill = region, label = region), concavity = 1,) +
     theme_light() +
+    xlab("INDIVIDUAL-ORIENTED <---------> FAMILY-ORIENTED") + 
+    ylab("AUTHORITARIAN <---------> ANARCHIST") +
     coord_cartesian(clip = "off")+
     theme(plot.margin = margin(10,10,10,50),
           legend.background = element_blank()) +
     geom_text_repel(data = pca_score,
                     mapping = aes(x = RC1, y = RC2, label = countrylist),
                     size = 4)
+  ggsave(paste(path, "culturemap", suffix, sep = ""), 
+           width = 13, height = 8)
     
   # clustering by group, this figure is not very pretty...
   # rc1 <- pca_score$RC1 + runif(n_country, -1, 1)
@@ -66,3 +74,5 @@ pca_process <- function(mean, if_norm){
 pca_process(country_mean_norm[, 3:n_var+2], 1)# notice that this df contains contains
                                             # questions and group labels 
 pca_process(country_mean[, 3:n_var+2], 0)
+
+
